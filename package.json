@@ -1,0 +1,12 @@
+{
+  "name": "MqttHelper",
+  "description": "MQTT.js helper. Supports retryTimeout",
+  "version": "0.0.1",
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.8.6"
+  },
+  "dependencies": {
+    "mqtt": "0.2.9"
+  }
+}
