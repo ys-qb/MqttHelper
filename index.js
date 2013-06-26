@@ -29,7 +29,7 @@ function MqttHelper(port, host, opts) {
   (function init() {
     var client;
 
-    self.client = client = mqtt.createClient(self.opts),
+    self.client = client = mqtt.createClient(self.port, self.host, self.opts),
 
     client.on('connect', self.emit.bind(self, 'connect'));
     client.on('message', self.emit.bind(self, 'message'));
@@ -43,7 +43,7 @@ function MqttHelper(port, host, opts) {
       console.error('closed');
       self.client = null;
       this.end();
-      setTimeout(init.bind(self), self.opts.retryTimeout || 60000);
+      setTimeout(init.bind(self), self.opts.retryTimeout * 1000 || 60 * 1000);
       self.emit('close');
     });
   })();
@@ -78,6 +78,7 @@ MqttHelper.prototype.publish = function () {
   }
 };
 
+// same as MQTT.js client.subscribe
 /**
  * subscribe - subscribe to <topic>
  *
@@ -105,7 +106,7 @@ module.exports = MqttHelper;
 
 // EXAMPLE
 /*
-var mh = new MqttHelper(1883, 'localhost', {clientId: 'pi1', keepalive: 30});
+var mh = new MqttHelper(1883, '192.168.1.101', {clientId: 'pi1', keepalive: 30});
 
 setInterval(function () {
   mh.publish('pi1/temp1', Math.floor(Math.random() * 20).toString(), {qos: 1, retain: true}, function () { });
@@ -122,7 +123,7 @@ mh.on('message', function (topic, message, packet) {
   console.log(topic + ":" + message);
 });
 
-mh.on('close', function() {
+mh.on('close', function () {
   // this.unsubscribe()...
 });
 */
